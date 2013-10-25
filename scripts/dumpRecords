@@ -1,0 +1,7 @@
+#!/bin/bash
+for h in $@ ; do
+    FILES=$(wget $h:8080 -q -O -)
+    for f in $FILES ; do
+	      wget $h:8080/$f -q -O -
+    done
+done

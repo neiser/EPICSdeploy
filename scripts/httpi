@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 use POSIX qw(SIGALRM SIGTERM SIGPIPE SIGHUP sigaction);
+use FindBin qw($Bin);
 $VERSION = "1.7.1 (Demonic/Linux)";
 
 # HTTPi Hypertext Tiny Truncated Process Implementation
@@ -84,6 +85,15 @@ $VERSION = "1.7.1 (Demonic/Linux)";
 
 $logfile = "/dev/null";
 $path = "/tmp/ioc";
+
+unless(-d $path) {
+  mkdir $path or die "can't create dir $path: $!";
+}
+
+unless(-f "$path/index.html") {
+  symlink "$Bin/index.html","$path/index.html" or die "can't symlink: $!";
+}
+
 $sockaddr = 'S n a4 x8';
 $server_host = `hostname -s`;
 $server_port = "8080";
