@@ -1,0 +1,33 @@
+#!/usr/bin/perl
+
+# Name this index.html and put it in a directory you want to be browsable.
+# Make sure this script has the execute bits set on it.
+#
+# Cameron Kaiser
+
+$j = $ENV{'SCRIPT_FILENAME'}; $j =~ s#/[^/]*$##; chdir($j) || die;
+$j = $ENV{'SCRIPT_NAME'}; $j =~ s#/[^/]*$##; opendir(D, ".") || die;
+($ENV{'SCRIPT_NAME'} =~ m#/([^/]*)$#) && ($ME = $1 || "index.html");
+
+print <<"EOF";
+HTTP/1.0 200 OK
+Content-type: text/plain
+
+EOF
+
+@files = ();
+
+while(defined($q = readdir(D))) {
+	next if ($q =~ /^\./ || $q eq 'core' || $q eq $ME || $q eq 'README');
+	push(@files, $q);
+}
+
+closedir(D);
+
+foreach $q (@files) {
+	$j = $q;
+	$d = (-d $q) ? '/' : '';
+	print "$q$d\n"
+}
+
+ 1;
